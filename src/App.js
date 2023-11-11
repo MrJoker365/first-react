@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import Counter from "./components/Counter";
+import ClassCounter from "./components/ClassCounter";
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Counter/> {/* таким способом викликається компонент Counter.jsx */}
 
       <Counter/> 
+      <ClassCounter/>
 
     </div>
   );
