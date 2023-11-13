@@ -15,21 +15,31 @@ function App() {
     {id: 2, title: "Java", body: "Description"}
   ])
 
-  const [posts2, setPost2] = useState([
-    {id: 1, title: "Python", body: "Description"},
-    {id: 2, title: "Ruby", body: "Description"}
-  ])
-  
+
+  const addNewPost = (e) => { // e -- це те ж саме що event (для себе скоротив)
+    e.preventDefault(); // вимикає дефолтне перезавантаження
+    console.log(title);
+  }
+
+  const [title, setTitle] = useState ("scasc")  
 
   return (
     <div className="App"> 
 
-      <MyInput type="text" placeholder="Назва поста"/>
-      <MyInput type="text" placeholder="Опис поста"/>
-      <MyButton disabled >Пост</MyButton> 
+      <form>
+        {/* Керований компонент(input) */}
+        <MyInput 
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+          type="text" 
+          placeholder="Назва поста"
+        />
+        <MyInput type="text" placeholder="Опис поста"/>
+        <MyButton onClick={addNewPost} >Пост</MyButton> 
 
-      <PostList posts={posts} title="Список 1"/>
-      <PostList posts={posts2} title="Список 2"/>
+        <PostList posts={posts} title="Список 1"/>
+
+      </form>
 
 
     </div>
