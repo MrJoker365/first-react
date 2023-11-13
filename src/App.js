@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useRef, useState } from "react";
 import Counter from "./components/Counter";
 import ClassCounter from "./components/ClassCounter";
 import './styles/App.css' ;
@@ -19,22 +19,36 @@ function App() {
   const addNewPost = (e) => { // e -- це те ж саме що event (для себе скоротив)
     e.preventDefault(); // вимикає дефолтне перезавантаження
     console.log(title);
+
+    // useRef() рекомендується в крайніх випадках
+    console.log(bodyInputRef1.current.value); // useRef має лише 1 метод який викликає DOM елемент (.current)
+                                              // якщо забрати .value , виведеться HTML код
+    console.log(bodyInputRef2.current.value);
   }
 
   const [title, setTitle] = useState ("scasc")  
+  const bodyInputRef1 = useRef(); // 
+  const bodyInputRef2 = useRef(); // 
+
 
   return (
     <div className="App"> 
 
       <form>
-        {/* Керований компонент(input) */}
+        {/* Некерований компонент useRef() */}
         <MyInput 
           value={title}
           onChange={e => setTitle(e.target.value)}
           type="text" 
           placeholder="Назва поста"
         />
-        <MyInput type="text" placeholder="Опис поста"/>
+
+        <input ref={bodyInputRef1} type="text"/>  {/* передача інфи до useRef(включно з HTML кодом) */}
+        
+        <MyInput ref={bodyInputRef2} type="text" placeholder="Опис поста"/>  {/* Для того щоб працював 
+                                                                            власний компонент з useRef, потрібно налаштувати 
+                                                                            сам компонент MyInput.jsx*/}
+
         <MyButton onClick={addNewPost} >Пост</MyButton> 
 
         <PostList posts={posts} title="Список 1"/>
