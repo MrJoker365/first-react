@@ -10,44 +10,61 @@ import MyInput from "./components/UI/input/MyInput";
 
 function App() {
 
-  const [posts, setPost] = useState([
+  const [posts, setPosts] = useState([
     {id: 1, title: "JavaScript", body: "Description"},
     {id: 2, title: "Java", body: "Description"}
   ])
 
+  // const [title, setTitle] = useState ("TiTLE")  
+  // const [body, setBody] = useState ("BODY")  
+
+  const [post, setPost] = useState({ title: "", body: ""})
+
 
   const addNewPost = (e) => { // e -- це те ж саме що event (для себе скоротив)
     e.preventDefault(); // вимикає дефолтне перезавантаження
-    console.log(title);
 
-    // useRef() рекомендується в крайніх випадках
-    console.log(bodyInputRef1.current.value); // useRef має лише 1 метод який викликає DOM елемент (.current)
-                                              // якщо забрати .value , виведеться HTML код
-    console.log(bodyInputRef2.current.value);
+    /*
+    const newPost = {
+      id: Date.now(), // завжди має бути унікальне значення
+                      // у PostList.jsx потім передається як key={post.id} через .map
+      title,
+      body
+    }
+    setPosts([...posts, newPost])  // така концепція добавлення нового поста
+    */
+
+    // setTitle("") // Обнуляєм поля після нажимання кнопки
+    // setBody("")  //
+
+    setPosts([...posts, {...post, id: Date.now()}])
+    setPost({title: "", body: ""})
+
   }
 
-  const [title, setTitle] = useState ("scasc")  
-  const bodyInputRef1 = useRef(); // 
-  const bodyInputRef2 = useRef(); // 
-
-
+  
   return (
     <div className="App"> 
 
       <form>
-        {/* Некерований компонент useRef() */}
+      
         <MyInput 
-          value={title}
-          onChange={e => setTitle(e.target.value)}
+          // value={title}
+          // onChange={e => setTitle(e.target.value)}
+          value={post.title}
+          onChange={e => setPost({...post, title: e.target.value})} 
           type="text" 
           placeholder="Назва поста"
         />
-
-        <input ref={bodyInputRef1} type="text"/>  {/* передача інфи до useRef(включно з HTML кодом) */}
         
-        <MyInput ref={bodyInputRef2} type="text" placeholder="Опис поста"/>  {/* Для того щоб працював 
-                                                                            власний компонент з useRef, потрібно налаштувати 
-                                                                            сам компонент MyInput.jsx*/}
+        <MyInput
+          // value={body}
+          // onChange={e => setBody(e.target.value) } 
+          value={post.body}
+          onChange={e => setPost({...post, body: e.target.value})} 
+          type="text" 
+          placeholder="Опис поста"
+        />  
 
         <MyButton onClick={addNewPost} >Пост</MyButton> 
 
