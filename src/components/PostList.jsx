@@ -1,7 +1,8 @@
 import React from "react";
 import PostItem from "./PostItem";
 
-const PostList = ({posts, title}) => { // ({posts, title}) -- це вже декомпозиція props
+const PostList = ({posts, title, remove}) => { // ({posts, title}) -- це вже декомпозиція props
+                                                // remove -- колбек для видалення поста
     return (
         <div> 
 
@@ -10,7 +11,12 @@ const PostList = ({posts, title}) => { // ({posts, title}) -- це вже дек
             </h1>
         
             {posts.map((post, index) => 
-                <PostItem number={index + 1} post={post} key={post.id}/>
+                <PostItem 
+                    remove={remove} // передача callback на другий рівень
+                    number={index + 1} 
+                    post={post} 
+                    key={post.id}
+                />
             )}
   
   

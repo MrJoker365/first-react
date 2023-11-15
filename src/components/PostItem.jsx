@@ -1,4 +1,5 @@
 import React from "react";
+import MyButton from "./UI/button/MyButton";
 
 const PostItem = (props) => { // В даному випадку props - це значення, які передавались в  App.js у :
                                 //  <PostItem post={{id: 1, title: "JavaScript", body: "Description"}} />
@@ -12,7 +13,9 @@ const PostItem = (props) => { // В даному випадку props - це з�
           </div>
         </div>
         <div className="post__btns">
-          <button>Видалити</button>
+          <MyButton onClick={()=> props.remove(props.post)}> {/* виклик callback видалення поста */}
+            Видалити
+          </MyButton>
         </div>
       </div>
     )

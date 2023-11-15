@@ -18,10 +18,14 @@ function App() {
 
 
 
-// 58 ХВ
+// 1.01 год
 
   const createPost = (newPost) => { // безпосередньо сам callback
     setPosts([...posts, newPost])
+  }
+
+  const removePost = (post) => {
+    setPosts(posts.filter(p => p.id !== post.id)) // callback видалення поста
   }
   
   return (
@@ -30,7 +34,7 @@ function App() {
      {/* Для того, щоб отримати інформацію з дочірнього класу, потрібно створити колбек */}
       <PostForm create={createPost}/> {/* тут буде передаватись власний колбек */}
 
-      <PostList posts={posts} title="Список 1"/>
+      <PostList remove={removePost} posts={posts} title="Список 1"/>
 
 
     </div>
