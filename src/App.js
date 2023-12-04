@@ -1,40 +1,72 @@
-import { React, useRef, useState } from "react";
-import Counter from "./components/Counter";
-import ClassCounter from "./components/ClassCounter";
+import {useState } from "react";
 import './styles/App.css' ;
-import PostItem from "./components/PostItem";
 import PostList from "./components/PostList";
-import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
+import MySelect from "./components/UI/select/MySelect";
 
 
 function App() {
+
+
 
   const [posts, setPosts] = useState([
     {id: 1, title: "JavaScript", body: "Description"},
     {id: 2, title: "Java", body: "Description"}
   ])
+  const [selectedSort, setSelectedSort] = useState(""); // для MySelect.jsx
 
 
 
-// 1.01 год
 
-  const createPost = (newPost) => { // безпосередньо сам callback
+
+
+
+  const createPost = (newPost) => {
     setPosts([...posts, newPost])
   }
-
   const removePost = (post) => {
-    setPosts(posts.filter(p => p.id !== post.id)) // callback видалення поста
+    setPosts(posts.filter(p => p.id !== post.id)) 
   }
+  const sortPost = (sort) => { // для MySelect.jsx
+    setSelectedSort(sort);
+      console.log(sort)
+      setPosts([...posts].sort((a, b) =>  a[sort].localeCompare(b[sort])))
+  }
+
+
+
+
+
+
   
   return (
-    <div className="App"> 
+    <div className="App">
 
-     {/* Для того, щоб отримати інформацію з дочірнього класу, потрібно створити колбек */}
-      <PostForm create={createPost}/> {/* тут буде передаватись власний колбек */}
+   
+      <PostForm create={createPost}/>
 
-      <PostList remove={removePost} posts={posts} title="Список 1"/>
+      <hr style={{margin: '15px 0'}}/>
+
+      <div>
+        <MySelect
+            value={selectedSort}
+            onChange={sortPost}
+            defaultValue={"Сортування по"}
+            options={[
+              {value: 'title', name: 'Пл назві'},
+              {value: 'body', name: 'По опису'},
+            ]}
+        />
+      </div>
+
+      {posts.length // тернарний операто 
+        ? 
+        <PostList remove={removePost} posts={posts} title="Список 1"/>
+        :
+        <h1 style={{textAlign: "center"}}>
+          Пости не найдено
+        </h1>
+      }
 
 
     </div>
