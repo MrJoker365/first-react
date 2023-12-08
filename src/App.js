@@ -1,4 +1,4 @@
-import {useState } from "react";
+import {useMemo, useState} from "react";
 import './styles/App.css' ;
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -18,19 +18,27 @@ function App() {
 
     const [searchQuery, setSearchQuery] = useState("") // Для пошукового поля
     
-    function getSortedPost() {
-        console.log("Спрацювала функція sortedPost")
+
+
+
+
+    const sortedPosts = useMemo(()=>{ // Допомагає виконувати функцію лише при певних змінах
+
+        console.log("Спрацювала функція sortedPosts")
         if (selectedSort){
             return [...posts].sort((a, b) =>  a[selectedSort].localeCompare(b[selectedSort]))
         }
 
         return posts;
 
-    }
+    }, [selectedSort, posts]);  // Виконається, якщо хоть одне значення із масива зміниться
 
 
-    const sortedPost =getSortedPost();
+    const sortedAndSearchedPosts = useMemo( () => {
 
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery))
+
+    }, [searchQuery, sortedPosts])
 
 
 
@@ -85,9 +93,9 @@ function App() {
 
           </div>
 
-          {posts.length // тернарний операто
+          {sortedAndSearchedPosts.length // тернарний операто
               ?
-              <PostList remove={removePost} posts={sortedPost} title="Список 1"/>
+              <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список 1"/>
               :
               <h1 style={{textAlign: "center"}}>
                   Пости не найдено
