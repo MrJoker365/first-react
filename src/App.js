@@ -3,6 +3,8 @@ import './styles/App.css' ;
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/MyModal/MyModal";
+import MyButton from "./components/UI/button/MyButton";
 
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
 
     const [filter, setFilter] = useState({sort: "", query: ""}) // замість selectedSort та searchQuery
                                                                                                 // для PostFilter.jsx
+    const [modal, setModal] = useState(false);
 
 
 
@@ -51,6 +54,7 @@ function App() {
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
+        setModal(false) // для того щоб скривалось модальне вікно пісдя створення поста
     }
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
@@ -63,13 +67,19 @@ function App() {
 
 
 
-
+// Ссилка на модальне вікно React.Js 1.24 год
 
   
   return (
       <div className="App">
 
-          <PostForm create={createPost}/>
+          <MyButton style={{marginTop: 30}} onClick={() => setModal(true)}>
+              Створити пост
+          </MyButton>
+
+          <MyModal visible={modal} setVisible={setModal}>
+              <PostForm create={createPost} />
+          </MyModal>
 
           <hr style={{margin: '15px 0'}}/>
 
@@ -80,7 +90,7 @@ function App() {
 
           <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список 1"/>
 
-          
+
       </div>
   );
 }
