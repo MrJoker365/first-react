@@ -2,8 +2,7 @@ import {useMemo, useState} from "react";
 import './styles/App.css' ;
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
-import MySelect from "./components/UI/select/MySelect";
-import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 
 
 function App() {
@@ -14,10 +13,13 @@ function App() {
         {id: 1, title: "JavaScript", body: "Description"},
         {id: 2, title: "Java", body: "Description"}
     ])
-    const [selectedSort, setSelectedSort] = useState(""); // для MySelect.jsx
 
-    const [searchQuery, setSearchQuery] = useState("") // Для пошукового поля
-    
+    // const [selectedSort, setSelectedSort] = useState(""); // для MySelect.jsx
+    //
+    // const [searchQuery, setSearchQuery] = useState("") // Для пошукового поля
+
+    const [filter, setFilter] = useState({sort: "", query: ""}) // замість selectedSort та searchQuery
+                                                                                                // для PostFilter.jsx
 
 
 
@@ -25,20 +27,22 @@ function App() {
     const sortedPosts = useMemo(()=>{ // Допомагає виконувати функцію лише при певних змінах
 
         console.log("Спрацювала функція sortedPosts")
-        if (selectedSort){
-            return [...posts].sort((a, b) =>  a[selectedSort].localeCompare(b[selectedSort]))
+        if (filter.sort){
+            return [...posts].sort((a, b) =>  a[filter.sort].localeCompare(b[filter.sort]))
         }
 
         return posts;
 
-    }, [selectedSort, posts]);  // Виконається, якщо хоть одне значення із масива зміниться
+    }, [filter.sort, posts]);  // Виконається, якщо хоть одне значення із масива зміниться
 
 
     const sortedAndSearchedPosts = useMemo( () => {
 
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery))
+        console.log("Спрацювала функція sortedAndSearchedPosts")
 
-    }, [searchQuery, sortedPosts])
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
+
+    }, [filter.query, sortedPosts])
 
 
 
@@ -51,10 +55,10 @@ function App() {
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
     }
-    const sortPost = (sort) => { // для MySelect.jsx
-        setSelectedSort(sort);
-        console.log(sort)
-    }
+    // const sortPost = (sort) => { // для MySelect.jsx
+    //     setSelectedSort(sort);
+    //     console.log(sort)
+    // }
 
 
 
@@ -69,40 +73,14 @@ function App() {
 
           <hr style={{margin: '15px 0'}}/>
 
+          <PostFilter // містиь сортування по умові та фільтрацію по полю пошуку
+              filter={filter}
+              setFilter={setFilter}
+          />
 
-          <div>
+          <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список 1"/>
 
-              <MyInput
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Пошук..."
-              />
-
-
-
-              <MySelect
-
-                  value={selectedSort}
-                  onChange={sortPost}
-                  defaultValue={"Сортування по"}
-                  options={[
-                      {value: 'title', name: 'Пл назві'},
-                      {value: 'body', name: 'По опису'},
-                  ]}
-              />
-
-          </div>
-
-          {sortedAndSearchedPosts.length // тернарний операто
-              ?
-              <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список 1"/>
-              :
-              <h1 style={{textAlign: "center"}}>
-                  Пости не найдено
-              </h1>
-          }
-
-
+          
       </div>
   );
 }

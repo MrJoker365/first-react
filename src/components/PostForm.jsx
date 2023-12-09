@@ -22,24 +22,24 @@ const PostForm = ({create}) => { // деструктуризація колбе�
     return (
         <form>
       
-        <MyInput 
-          value={post.title}
-          onChange={e => setPost({...post, title: e.target.value})} 
-          type="text" 
-          placeholder="Назва поста"
-        />
+            <MyInput
+                value={post.title}
+                onChange={e => setPost({...post, title: e.target.value})}
+                type="text"
+                placeholder="Назва поста"
+            />
         
-        <MyInput
-          value={post.body}
-          onChange={e => setPost({...post, body: e.target.value})} 
-          type="text" 
-          placeholder="Опис поста"
-        />  
+            <MyInput
+                value={post.body}
+                onChange={e => setPost({...post, body: e.target.value})}
+                type="text"
+                placeholder="Опис поста"
+            />
 
-        <MyButton onClick={addNewPost} >Пост</MyButton> 
+            <MyButton onClick={addNewPost} >Пост</MyButton>
 
         
-      </form>
+        </form>
     )
 }
 
