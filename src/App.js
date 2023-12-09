@@ -6,6 +6,7 @@ import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import {usePostsHook} from "./hooks/usePostsHook";
+import axios from "axios";
 
 
 function App() {
@@ -19,35 +20,20 @@ function App() {
 
     const [filter, setFilter] = useState({sort: "", query: ""}) // замість selectedSort та searchQuery
                                                                                                 // для PostFilter.jsx
-    const [modal, setModal] = useState(false);
+    const [modal, setModal] = useState(false); // вспливання вікна для створення поста
 
     const sortedAndSearchedPosts = usePostsHook(posts, filter.sort, filter.query) // власний hook  (usePostsHook.js)
                                                                                     // скорочений вигляд sortedPost
                                                                                     // та sortedAndSearchedPosts
 
 
+    async function fetchPosts() {
 
+        const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
+        console.log(response.data)
+        setPosts(response.data)
 
-    // const sortedPosts = useMemo(()=>{ // Допомагає виконувати функцію лише при певних змінах
-    //
-    //     console.log("Спрацювала функція sortedPosts")
-    //     if (filter.sort){
-    //         return [...posts].sort((a, b) =>  a[filter.sort].localeCompare(b[filter.sort]))
-    //     }
-    //
-    //     return posts;
-    //
-    // }, [filter.sort, posts]);  // Виконається, якщо хоть одне значення із масива зміниться
-
-
-    // const sortedAndSearchedPosts = useMemo( () => {
-    //
-    //     console.log("Спрацювала функція sortedAndSearchedPosts")
-    //
-    //     return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query))
-    //
-    // }, [filter.query, sortedPosts])
-
+    }
 
 
 
@@ -67,6 +53,8 @@ function App() {
   
   return (
       <div className="App">
+
+          <button onClick={fetchPosts} >GET POSTS</button>
 
           <MyButton style={{marginTop: 30}} onClick={() => setModal(true)}>
               Створити пост
