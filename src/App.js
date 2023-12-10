@@ -6,8 +6,8 @@ import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import {usePostsHook} from "./hooks/usePostsHook";
-import axios from "axios";
 import PostService from "./API/PostService";
+import Loader from "./components/UI/Loader/Loader";
 
 
 function App() {
@@ -26,6 +26,7 @@ function App() {
     const sortedAndSearchedPosts = usePostsHook(posts, filter.sort, filter.query) // власний hook  (usePostsHook.js)
                                                                                     // скорочений вигляд sortedPost
                                                                                     // та sortedAndSearchedPosts
+    const [isPostsLoading, setIsPostsLoading] = useState(false);
 
     // useEffect(() => {
     //     console.log("1 useEffect Спрацює лише раз при запуску")
@@ -51,10 +52,17 @@ function App() {
 
     async function fetchPosts() {
 
-        const getUrlPosts = await PostService.getAll(); // зробив API шаблон
-        console.log(getUrlPosts)
-        setPosts(getUrlPosts)
+        setIsPostsLoading(true);
 
+        setTimeout( async () => { // штучна затримка на 1 сек.
+
+            const getUrlPosts = await PostService.getAll(); // зробив API шаблон
+            console.log(getUrlPosts)
+            setPosts(getUrlPosts)
+
+            setIsPostsLoading(false);
+
+        }, 1000)
 
 
     }
@@ -95,8 +103,12 @@ function App() {
               setFilter={setFilter}
           />
 
-          <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список 1"/>
+          {isPostsLoading
+              ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}> <Loader/> </div>
+              : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список 1"/>
 
+
+          }
 
       </div>
   );
