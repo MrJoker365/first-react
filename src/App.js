@@ -35,9 +35,10 @@ function App() {
                                                                                 // та sortedAndSearchedPosts
 
     let pagesArray = getPagedArray(totalPages); // для визначеня кількості сторінок (pages.js)
-
     console.log([pagesArray])
-    const [fetchPosts, isPostsLoading, postError] = useFetchingHook(async () => {
+
+    // 2 спосіб трохи тяжчий для розуміння....
+    const [fetchPosts, isPostsLoading, postError] = useFetchingHook(async (limit, page) => {
         const response = await PostService.getAll(limit, page);
         setPosts(response.data)
         const totalCount = (response.headers["x-total-count"]) // загальна кількість постів
@@ -45,8 +46,8 @@ function App() {
     }) // загрузка callback через await / Обробка індикації загрузки / Обробка можливих помилок
 
     useEffect(() => { //
-        fetchPosts();
-    }, [page]); // Добавивши сюди [page], useEffect буде оновлятись при кожній зміні page
+        fetchPosts(limit, page); // 2 спосіб
+    }, []);
 
 
 
@@ -63,7 +64,7 @@ function App() {
     }
     const changePage = (page) => {
         setPage(page)
-        //fetchPosts() // так не підійде, по буде працювати з запізненням (іза рендерінга JS)
+        fetchPosts(limit, page) // 2 спосіб (а так буде працювати без запізнеь)
     }
 
 
