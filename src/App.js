@@ -11,6 +11,7 @@ import Loader from "./components/UI/Loader/Loader";
 import {useFetchingHook} from "./hooks/useFetchingHook";
 import {getPageCount, getPagedArray} from "./utils/pages";
 import myButton from "./components/UI/button/MyButton";
+import Pagination from "./components/UI/pagination/Pagination";
 
 
 function App() {
@@ -34,8 +35,7 @@ function App() {
                                                                                 // скорочений вигляд sortedPost
                                                                                 // та sortedAndSearchedPosts
 
-    let pagesArray = getPagedArray(totalPages); // для визначеня кількості сторінок (pages.js)
-    console.log([pagesArray])
+
 
     // 2 спосіб трохи тяжчий для розуміння....
     const [fetchPosts, isPostsLoading, postError] = useFetchingHook(async (limit, page) => {
@@ -102,18 +102,13 @@ function App() {
 
           }
 
-          <div style={{marginTop: 30}}>
-              {pagesArray.map(p => // номери сторінок
-                  // <MyButton>{p}</MyButton>
-                  <span
-                      onClick={() => changePage(p)} // передаєм номер сторінки на яку нажав користувач
-                      key={p}
-                      className={page === p // умова коли вибрана сторінка
-                          ? 'page page__current'
-                          : 'page'}
-                  >{p}</span>
-              )}
-          </div>
+          <Pagination // нумераці (пагінація) сторінок
+              page={page}
+              changePage={changePage}
+              totalPages={totalPages}
+          />
+
+
 
 
       </div>
