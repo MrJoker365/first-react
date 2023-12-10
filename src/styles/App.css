@@ -25,3 +25,21 @@
     align-items: center;
 /*                           */
 }
+
+.page__wrapper {
+    margin-top: 30px;
+    display: flex;
+
+}
+
+.page { /*кнопки з номерами сторінок*/
+    padding: 10px;
+    border: 1px solid teal;
+    cursor: pointer;
+}
+
+.page__current { /*обрана кнопка*/
+    border: 2px solid orange;
+    font-weight: bold;
+
+}

@@ -9,6 +9,8 @@ import {usePostsHook} from "./hooks/usePostsHook";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/Loader/Loader";
 import {useFetchingHook} from "./hooks/useFetchingHook";
+import {getPageCount, getPagedArray} from "./utils/pages";
+import myButton from "./components/UI/button/MyButton";
 
 
 function App() {
@@ -24,12 +26,22 @@ function App() {
                                                                                                 // для PostFilter.jsx
     const [modal, setModal] = useState(false); // вспливання вікна для створення поста
 
+    const [totalPages, setTotalPages] = useState(0); //
+    const [limit, setLimit] = useState(10);          //  для посторінкового виводу
+    const [page, setPage] = useState(1);             //
+
     const sortedAndSearchedPosts = usePostsHook(posts, filter.sort, filter.query) // власний hook  (usePostsHook.js)
-                                                                                    // скорочений вигляд sortedPost
-                                                                                    // та sortedAndSearchedPosts
+                                                                                // скорочений вигляд sortedPost
+                                                                                // та sortedAndSearchedPosts
+
+    let pagesArray = getPagedArray(totalPages); // для визначеня кількості сторінок (pages.js)
+
+    console.log([pagesArray])
     const [fetchPosts, isPostsLoading, postError] = useFetchingHook(async () => {
-        const getUrlPosts = await PostService.getAll();
-        setPosts(getUrlPosts)
+        const response = await PostService.getAll(limit, page);
+        setPosts(response.data)
+        const totalCount = (response.headers["x-total-count"]) // загальна кількість постів
+        setTotalPages(getPageCount(totalCount, limit))
     }) // загрузка callback через await / Обробка індикації загрузки / Обробка можливих помилок
 
     useEffect(() => { //
@@ -84,6 +96,20 @@ function App() {
 
 
           }
+
+          <div style={{marginTop: 30}}>
+              {pagesArray.map(p => // номери сторінок
+                  // <MyButton>{p}</MyButton>
+                  <span
+                      onClick={() => setPage(p)} // передаєм номер сторінки на яку нажав користувач
+                      key={p}
+                      className={page === p // умова коли вибрана сторінка
+                          ? 'page page__current'
+                          : 'page'}
+                  >{p}</span>
+              )}
+          </div>
+
 
       </div>
   );
