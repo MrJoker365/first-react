@@ -8,6 +8,7 @@ import MyButton from "./components/UI/button/MyButton";
 import {usePostsHook} from "./hooks/usePostsHook";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/Loader/Loader";
+import {useFetchingHook} from "./hooks/useFetchingHook";
 
 
 function App() {
@@ -26,46 +27,16 @@ function App() {
     const sortedAndSearchedPosts = usePostsHook(posts, filter.sort, filter.query) // власний hook  (usePostsHook.js)
                                                                                     // скорочений вигляд sortedPost
                                                                                     // та sortedAndSearchedPosts
-    const [isPostsLoading, setIsPostsLoading] = useState(false);
+    const [fetchPosts, isPostsLoading, postError] = useFetchingHook(async () => {
+        const getUrlPosts = await PostService.getAll();
+        setPosts(getUrlPosts)
+    }) // загрузка callback через await / Обробка індикації загрузки / Обробка можливих помилок
 
-    // useEffect(() => {
-    //     console.log("1 useEffect Спрацює лише раз при запуску")
-    // }, []);
-    //
-    // useEffect(() => {
-    //     console.log("2 useEffect Спрацює на кожну зміну у filter ")
-    // }, [filter]);
-    //
-    // useEffect(() => {
-    //     console.log("3 useEffect Спрацює лише раз при демонтуванні компонента (хз що і як...)")
-    //     return () => {
-    //          alert("очистка")
-    //         // робим очистку
-    //     }
-    // }, []);
-
-
-    useEffect(() => {
-        fetchPosts();
+    useEffect(() => { //
+        fetchPosts(); // безпосередньо сама загрузка поста при старті сторінки
     }, []);
 
 
-    async function fetchPosts() {
-
-        setIsPostsLoading(true);
-
-        setTimeout( async () => { // штучна затримка на 1 сек.
-
-            const getUrlPosts = await PostService.getAll(); // зробив API шаблон
-            console.log(getUrlPosts)
-            setPosts(getUrlPosts)
-
-            setIsPostsLoading(false);
-
-        }, 1000)
-
-
-    }
 
 
 
@@ -102,6 +73,10 @@ function App() {
               filter={filter}
               setFilter={setFilter}
           />
+          {postError &&
+              <h1>Виникла помилка ${postError}</h1>
+
+          }
 
           {isPostsLoading
               ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}> <Loader/> </div>
