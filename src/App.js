@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import './styles/App.css' ;
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -7,6 +7,7 @@ import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import {usePostsHook} from "./hooks/usePostsHook";
 import axios from "axios";
+import PostService from "./API/PostService";
 
 
 function App() {
@@ -26,12 +27,35 @@ function App() {
                                                                                     // скорочений вигляд sortedPost
                                                                                     // та sortedAndSearchedPosts
 
+    // useEffect(() => {
+    //     console.log("1 useEffect Спрацює лише раз при запуску")
+    // }, []);
+    //
+    // useEffect(() => {
+    //     console.log("2 useEffect Спрацює на кожну зміну у filter ")
+    // }, [filter]);
+    //
+    // useEffect(() => {
+    //     console.log("3 useEffect Спрацює лише раз при демонтуванні компонента (хз що і як...)")
+    //     return () => {
+    //          alert("очистка")
+    //         // робим очистку
+    //     }
+    // }, []);
+
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
 
     async function fetchPosts() {
 
-        const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
-        console.log(response.data)
-        setPosts(response.data)
+        const getUrlPosts = await PostService.getAll(); // зробив API шаблон
+        console.log(getUrlPosts)
+        setPosts(getUrlPosts)
+
+
 
     }
 
