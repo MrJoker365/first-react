@@ -45,8 +45,8 @@ function App() {
     }) // загрузка callback через await / Обробка індикації загрузки / Обробка можливих помилок
 
     useEffect(() => { //
-        fetchPosts(); // безпосередньо сама загрузка поста при старті сторінки
-    }, []);
+        fetchPosts();
+    }, [page]); // Добавивши сюди [page], useEffect буде оновлятись при кожній зміні page
 
 
 
@@ -60,6 +60,10 @@ function App() {
     }
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
+    }
+    const changePage = (page) => {
+        setPage(page)
+        //fetchPosts() // так не підійде, по буде працювати з запізненням (іза рендерінга JS)
     }
 
 
@@ -101,7 +105,7 @@ function App() {
               {pagesArray.map(p => // номери сторінок
                   // <MyButton>{p}</MyButton>
                   <span
-                      onClick={() => setPage(p)} // передаєм номер сторінки на яку нажав користувач
+                      onClick={() => changePage(p)} // передаєм номер сторінки на яку нажав користувач
                       key={p}
                       className={page === p // умова коли вибрана сторінка
                           ? 'page page__current'
