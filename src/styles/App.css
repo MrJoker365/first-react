@@ -7,7 +7,8 @@
 
 #root {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 
@@ -43,3 +44,34 @@
     font-weight: bold;
 
 }
+
+
+/*Для Navbar.jsx*/
+
+header {
+    background-color: #2C2C32;
+    padding: 2rem 0;
+    text-align: center;
+    align-items: center;
+    width: 100vw;
+}
+header > a {
+    color: white;
+    text-decoration: none;
+    padding: 0 1rem;
+}
+header > a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    max-width: 900px;
+    padding: 2rem 0;
+    margin: 0 auto;
+}
+
+/* //      //   */
