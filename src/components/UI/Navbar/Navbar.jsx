@@ -13,7 +13,7 @@ const Navbar = () => {
         <>
             <header>
                 <Link to="/about" > Про сайт </Link>    {/*  замість  <a href="/about">Про сайт</a>  */}
-                <Link to="/" > Пости </Link>
+                <Link to="/posts" > Пости </Link>
             </header>
 
             <Outlet /> {/* буде передано весь контент */}

@@ -13,4 +13,9 @@ export default class PostService {
 
 
     }
+
+    static async getBiID(id){
+
+        return await axios.get("https://jsonplaceholder.typicode.com/posts/" + id);
+    }
 }

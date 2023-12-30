@@ -27,6 +27,10 @@
 /*                           */
 }
 
+.post__btns {
+    display: flex;
+}
+
 .page__wrapper {
     margin-top: 30px;
     display: flex;
