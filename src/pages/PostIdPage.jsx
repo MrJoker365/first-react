@@ -7,14 +7,22 @@ import Loader from "../components/UI/Loader/Loader";
 const PostIdPage = () => {
 
     const params = useParams(); // вивід динамічної складової URL
+
     const[post, setPost] = useState([]);
+    const[comments, setComments] = useState([])
+
     const[fetchPostById, isLoading, error] = useFetchingHook( async (id)=>{
         const response = await PostService.getBiID(id)  // можна і зразу params.id
         setPost(response.data);
     })
+    const[fetchComments, isComLoading, comError] = useFetchingHook( async (id)=>{
+        const response = await PostService.getCommentsByPostId(id)  // можна і зразу params.id
+        setComments(response.data);
+    })
 
     useEffect(() => {
         fetchPostById(params.id)
+        fetchComments(params.id)
     }, []);
 
     return (
@@ -23,6 +31,22 @@ const PostIdPage = () => {
             {isLoading
                 ? <Loader/>
                 : <div> {post.id} {post.title} </div>
+
+            }
+            <h1> Коментарі </h1>
+
+            {isComLoading
+                ? <Loader/>
+                : <div>
+
+                    {comments.map(com =>
+                        <div key={com.id} style={{marginTop: 15}}>
+                            <h5>{com.email}</h5>
+                            <div>{com.body} </div>
+                        </div>
+                    )}
+
+                </div>
 
             }
         </div>
