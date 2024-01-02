@@ -12,6 +12,7 @@ import {useFetchingHook} from "../hooks/useFetchingHook";
 import {usePostsHook} from "../hooks/usePostsHook";
 
 import "../styles/App.css"
+import {useObserverHook} from "../hooks/useObserverHook";
 
 
 function Posts() {
@@ -32,7 +33,6 @@ function Posts() {
     const [page, setPage] = useState(1);             //
 
     const lastElement = useRef(); // <div> у зоні видимості
-    const observer = useRef(); // можна зберігати дані, щоб не втрачати їх від рендеру до рендеру
 
     const sortedAndSearchedPosts = usePostsHook(posts, filter.sort, filter.query) // власний hook  (usePostsHook.js)
     // скорочений вигляд sortedPost
@@ -53,22 +53,9 @@ function Posts() {
     }, [page]);
 
 
-
-    useEffect(() => {
-
-        if (isPostsLoading) return;
-        if(observer.current) observer.current.disconnect();
-        let callback = function (entries, observe) {
-
-            if (entries[0].isIntersecting && page < totalPages) {
-                console.log("div в зоні видимості:" + page)
-                setPage(page + 1)
-            }
-        }
-        observer.current = new IntersectionObserver(callback); // значення записуються до useRef(), щоб між рендерінгом вони не втрачались
-        observer.current.observe(lastElement.current); // потім від нього викликається функція observe(), де передається useRef з тим умовним <div/> видимості
-
-    }, [isPostsLoading]);
+    useObserverHook(lastElement, page < totalPages, isPostsLoading, () => {
+        setPage(page + 1)
+    })
 
 
 
